@@ -43,14 +43,15 @@ class GeneratorFieldsInputUtil
 
         $field = new GeneratorField();
         $field->name = $fieldInputsArr[0];
-        $field->parseDBType($fieldInputsArr[1]);
-
-        if (count($fieldInputsArr) > 2) {
-            $field->parseHtmlInput($fieldInputsArr[2]);
-        }
+	    $field->fieldTitle = $fieldInputsArr[1];
+        $field->parseDBType($fieldInputsArr[2]);
 
         if (count($fieldInputsArr) > 3) {
-            $field->parseOptions($fieldInputsArr[3]);
+            $field->parseHtmlInput($fieldInputsArr[3]);
+        }
+
+        if (count($fieldInputsArr) > 4) {
+            $field->parseOptions($fieldInputsArr[4]);
         }
 
         $field->validations = $validations;

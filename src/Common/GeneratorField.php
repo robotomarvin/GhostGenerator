@@ -13,6 +13,7 @@ class GeneratorField
     public $htmlType;
     public $fieldType;
     public $description;
+	public $fieldTitle;
 
     /** @var array */
     public $htmlValues;
@@ -142,10 +143,6 @@ class GeneratorField
 
     public function __get($key)
     {
-        if ($key == 'fieldTitle') {
-            return Str::title(str_replace('_', ' ', $this->name));
-        }
-
         return $this->$key;
     }
 }
