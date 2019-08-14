@@ -35,6 +35,14 @@ class CommandData
     public $dynamicVars = [];
     public $fieldNamesMapping = [];
 
+    public $namespacePrefix;
+
+    public $isModule;
+
+    public $modulePrefix;
+
+    public $realPathPrefix;
+
     /** @var CommandData */
     protected static $instance = null;
 
@@ -84,6 +92,16 @@ class CommandData
 
     public function initCommandData()
     {
+	    $this->namespacePrefix = $this->commandObj->ask('Enter default prefix (App\\)', 'App\\');
+	    $this->isModule = strpos($this->namespacePrefix, 'Modules') === 0;
+	    if ($this->isModule) {
+	    	$parts = explode('\\', $this->namespacePrefix);
+		    $this->modulePrefix = Str::camel($parts[1]);
+		    $this->realPathPrefix = base_path(str_replace('\\', '/', $this->namespacePrefix));
+	    } else {
+	    	$this->realPathPrefix = app_path('') . '/';
+	    }
+
         $this->config->init($this);
     }
 

@@ -104,13 +104,14 @@ class GeneratorConfig
         $this->prepareAddOns();
         $this->prepareOptions($commandData);
         $this->prepareModelNames();
-        $this->preparePrefixes();
-        $this->loadPaths();
+        $this->preparePrefixes($commandData);
+        $this->loadPaths($commandData);
         $this->prepareTableName();
         $this->preparePrimaryName();
         $this->loadNamespaces($commandData);
         $commandData = $this->loadDynamicVariables($commandData);
         $this->commandData = &$commandData;
+
     }
 
     public function loadNamespaces(CommandData &$commandData)
@@ -121,29 +122,32 @@ class GeneratorConfig
             $prefix = '\\'.$prefix;
         }
 
+        $realPrefix = $this->prefixes['real_ns'];
+
+
         $this->nsApp = $commandData->commandObj->getLaravel()->getNamespace();
         $this->nsApp = substr($this->nsApp, 0, strlen($this->nsApp) - 1);
-        $this->nsRepository = config('infyom.laravel_generator.namespace.repository', 'App\Repositories').$prefix;
-        $this->nsModel = config('infyom.laravel_generator.namespace.model', 'App\Models').$prefix;
+        $this->nsRepository = $realPrefix . config('infyom.laravel_generator.namespace.repository', 'Repositories').$prefix;
+        $this->nsModel = $realPrefix . config('infyom.laravel_generator.namespace.model', 'Models').$prefix;
         if (config('infyom.laravel_generator.ignore_model_prefix', false)) {
-            $this->nsModel = config('infyom.laravel_generator.namespace.model', 'App\Models');
+            $this->nsModel = $realPrefix . config('infyom.laravel_generator.namespace.model', 'Models');
         }
-        $this->nsDataTables = config('infyom.laravel_generator.namespace.datatables', 'App\DataTables').$prefix;
+        $this->nsDataTables = $realPrefix . config('infyom.laravel_generator.namespace.datatables', 'DataTables').$prefix;
         $this->nsModelExtend = config(
             'infyom.laravel_generator.model_extend_class',
             'Illuminate\Database\Eloquent\Model'
         );
 
-        $this->nsApiController = config(
+        $this->nsApiController = $realPrefix . config(
             'infyom.laravel_generator.namespace.api_controller',
             'App\Http\Controllers\API'
         ).$prefix;
-        $this->nsApiRequest = config('infyom.laravel_generator.namespace.api_request', 'App\Http\Requests\API').$prefix;
+        $this->nsApiRequest = $realPrefix . config('infyom.laravel_generator.namespace.api_request', 'Http\Requests\API').$prefix;
 
-        $this->nsRequest = config('infyom.laravel_generator.namespace.request', 'App\Http\Requests').$prefix;
-        $this->nsRequestBase = config('infyom.laravel_generator.namespace.request', 'App\Http\Requests');
-        $this->nsBaseController = config('infyom.laravel_generator.namespace.controller', 'App\Http\Controllers');
-        $this->nsController = config('infyom.laravel_generator.namespace.controller', 'App\Http\Controllers').$prefix;
+        $this->nsRequest = $realPrefix . config('infyom.laravel_generator.namespace.request', 'Http\Requests').$prefix;
+        $this->nsRequestBase = $realPrefix . config('infyom.laravel_generator.namespace.request', 'Http\Requests');
+        $this->nsBaseController = $realPrefix . config('infyom.laravel_generator.namespace.controller', 'Http\Controllers');
+		$this->nsController = $realPrefix . config('infyom.laravel_generator.namespace.controller', 'Http\Controllers');
 
         $this->nsTestTraits = config('infyom.laravel_generator.namespace.test_trait', 'Tests\Traits');
         $this->nsApiTests = config('infyom.laravel_generator.namespace.api_test', 'Tests\APIs');
@@ -151,9 +155,11 @@ class GeneratorConfig
         $this->nsTests = config('infyom.laravel_generator.namespace.tests', 'Tests');
     }
 
-    public function loadPaths()
+    public function loadPaths(CommandData &$commandData)
     {
         $prefix = $this->prefixes['path'];
+
+        $realPrefix = $this->prefixes['real_path'];
 
         if (!empty($prefix)) {
             $prefix .= '/';
@@ -165,47 +171,62 @@ class GeneratorConfig
             $viewPrefix .= '/';
         }
 
-        $this->pathRepository = config(
+        $this->pathRepository = $realPrefix . config(
             'infyom.laravel_generator.path.repository',
-            app_path('Repositories/')
+            'Repositories/'
         ).$prefix;
 
-        $this->pathModel = config('infyom.laravel_generator.path.model', app_path('Models/')).$prefix;
+        $this->pathModel = $realPrefix . config('infyom.laravel_generator.path.model', 'Models/').$prefix;
         if (config('infyom.laravel_generator.ignore_model_prefix', false)) {
-            $this->pathModel = config('infyom.laravel_generator.path.model', app_path('Models/'));
+            $this->pathModel = $realPrefix . config('infyom.laravel_generator.path.model', 'Models/');
         }
 
-        $this->pathDataTables = config('infyom.laravel_generator.path.datatables', app_path('DataTables/')).$prefix;
+        $this->pathDataTables = $realPrefix . config('infyom.laravel_generator.path.datatables', 'DataTables/').$prefix;
 
-        $this->pathApiController = config(
+        $this->pathApiController = $realPrefix . config(
             'infyom.laravel_generator.path.api_controller',
-            app_path('Http/Controllers/API/')
+            'Http/Controllers/API/'
         ).$prefix;
 
-        $this->pathApiRequest = config(
+        $this->pathApiRequest = $realPrefix . config(
             'infyom.laravel_generator.path.api_request',
-            app_path('Http/Requests/API/')
+            'Http/Requests/API/'
         ).$prefix;
 
-        $this->pathApiRoutes = config('infyom.laravel_generator.path.api_routes', base_path('routes/api.php'));
+	    if ($commandData->isModule) {
+		    $this->pathApiRoutes = $realPrefix . config('infyom.laravel_generator.path.api_routes', 'routes/api.php');
+	    } else {
+		    $this->pathApiRoutes = base_path(config('infyom.laravel_generator.path.api_routes', 'routes/api.php'));
+	    }
 
         $this->pathApiTests = config('infyom.laravel_generator.path.api_test', base_path('tests/APIs/'));
 
         $this->pathApiTestTraits = config('infyom.laravel_generator.path.test_trait', base_path('tests/Traits/'));
 
-        $this->pathController = config(
+        $this->pathController = $realPrefix . config(
             'infyom.laravel_generator.path.controller',
             app_path('Http/Controllers/')
         ).$prefix;
 
-        $this->pathRequest = config('infyom.laravel_generator.path.request', app_path('Http/Requests/')).$prefix;
+        $this->pathRequest = $realPrefix . config('infyom.laravel_generator.path.request', app_path('Http/Requests/')).$prefix;
 
-        $this->pathRoutes = config('infyom.laravel_generator.path.routes', base_path('routes/web.php'));
+        if ($commandData->isModule) {
+	        $this->pathRoutes = $realPrefix . config('infyom.laravel_generator.path.routes', 'routes/web.php');
+        } else {
+	        $this->pathRoutes = base_path(config('infyom.laravel_generator.path.routes', 'routes/web.php'));
+        }
 
-        $this->pathViews = config(
-            'infyom.laravel_generator.path.views',
-            base_path('resources/views/')
-        ).$viewPrefix.$this->mSnakePlural.'/';
+        if ($commandData->isModule) {
+	        $this->pathViews = $realPrefix . config(
+			        'infyom.laravel_generator.path.views_module',
+			        'views/')
+		        .$this->mSnakePlural.'/';
+        } else {
+	        $this->pathViews = config(
+			        'infyom.laravel_generator.path.views',
+			        base_path('resources/views/')
+		        ).$viewPrefix.$this->mSnakePlural.'/';
+        }
 
         $this->modelJsPath = config(
                 'infyom.laravel_generator.path.modelsJs',
@@ -251,7 +272,11 @@ class GeneratorConfig
         $commandData->addDynamicVariable('$MODEL_NAME_HUMAN$', $this->mHuman);
         $commandData->addDynamicVariable('$MODEL_NAME_PLURAL_HUMAN$', $this->mHumanPlural);
 
-        if (!empty($this->prefixes['route'])) {
+        if ($commandData->isModule) {
+	        $commandData->addDynamicVariable('$ROUTE_NAMED_PREFIX$', $commandData->modulePrefix.'::');
+	        $commandData->addDynamicVariable('$ROUTE_PREFIX$', str_replace('.', '/', $commandData->modulePrefix).'/');
+	        $commandData->addDynamicVariable('$RAW_ROUTE_PREFIX$', $commandData->modulePrefix);
+        } else if (!empty($this->prefixes['route'])) {
             $commandData->addDynamicVariable('$ROUTE_NAMED_PREFIX$', $this->prefixes['route'].'.');
             $commandData->addDynamicVariable('$ROUTE_PREFIX$', str_replace('.', '/', $this->prefixes['route']).'/');
             $commandData->addDynamicVariable('$RAW_ROUTE_PREFIX$', $this->prefixes['route']);
@@ -266,7 +291,9 @@ class GeneratorConfig
             $commandData->addDynamicVariable('$PATH_PREFIX$', '');
         }
 
-        if (!empty($this->prefixes['view'])) {
+	    if ($commandData->isModule) {
+		    $commandData->addDynamicVariable('$VIEW_PREFIX$', str_replace('/', '.', $commandData->modulePrefix).'::');
+	    } elseif (!empty($this->prefixes['view'])) {
             $commandData->addDynamicVariable('$VIEW_PREFIX$', str_replace('/', '.', $this->prefixes['view']).'.');
         } else {
             $commandData->addDynamicVariable('$VIEW_PREFIX$', '');
@@ -355,7 +382,7 @@ class GeneratorConfig
         }
     }
 
-    public function preparePrefixes()
+    public function preparePrefixes(CommandData &$commandData)
     {
         $this->prefixes['route'] = explode('/', config('infyom.laravel_generator.prefixes.route', ''));
         $this->prefixes['path'] = explode('/', config('infyom.laravel_generator.prefixes.path', ''));
@@ -435,6 +462,9 @@ class GeneratorConfig
         }
 
         $this->prefixes['public'] = $publicPrefix;
+
+        $this->prefixes['real_path'] = $commandData->realPathPrefix;
+	    $this->prefixes['real_ns'] = $commandData->namespacePrefix;
     }
 
     public function overrideOptionsFromJsonFile($jsonData)
