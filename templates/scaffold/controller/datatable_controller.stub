@@ -127,7 +127,7 @@ class $MODEL_NAME$Controller extends AppBaseController
      *
      * @return RedirectResponse|View
      */
-    public function createForm(Request $request)
+    private function createForm(Request $request)
     {
         $$MODEL_NAME_CAMEL$ = new $MODEL_NAME$();
         $form = $this->$MODEL_NAME_CAMEL$FormFactory->create($$MODEL_NAME_CAMEL$, route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_DASHED$.store'), 'POST');
@@ -152,7 +152,7 @@ class $MODEL_NAME$Controller extends AppBaseController
      *
      * @return RedirectResponse|View
      */
-    public function updateForm($MODEL_NAME$ $$MODEL_NAME_CAMEL$, Request $request)
+    private function updateForm($MODEL_NAME$ $$MODEL_NAME_CAMEL$, Request $request)
     {
         $form = $this->$MODEL_NAME_CAMEL$FormFactory->create($$MODEL_NAME_CAMEL$, route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_DASHED$.update', $$MODEL_NAME_CAMEL$), 'PATCH');
 
