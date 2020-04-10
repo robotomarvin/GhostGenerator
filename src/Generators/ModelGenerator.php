@@ -43,7 +43,7 @@ class ModelGenerator extends BaseGenerator
 
     public function generate()
     {
-        $templateData = get_template('model.model', 'laravel-generator');
+        $templateData = get_template('model.model', 'ghost-generator');
 
         $templateData = $this->fillTemplate($templateData);
 
@@ -123,7 +123,7 @@ class ModelGenerator extends BaseGenerator
         if ($this->commandData->getAddOn('swagger')) {
             $templateData = $this->generateSwagger($templateData);
         } else {
-            $docsTemplate = get_template('docs.model', 'laravel-generator');
+            $docsTemplate = get_template('docs.model', 'ghost-generator');
             $docsTemplate = fill_template($this->commandData->dynamicVars, $docsTemplate);
 
             $fillables = '';

@@ -60,7 +60,7 @@ class GeneratorPublishCommand extends PublishBaseCommand
         $createdAtField = config('infyom.laravel_generator.timestamps.created_at', 'created_at');
         $updatedAtField = config('infyom.laravel_generator.timestamps.updated_at', 'updated_at');
 
-        $templateData = get_template('test.api_test_trait', 'laravel-generator');
+        $templateData = get_template('test.api_test_trait', 'ghost-generator');
 
         $templateData = str_replace('$NAMESPACE_TESTS$', $testsNameSpace, $templateData);
         $templateData = str_replace('$TIMESTAMPS$', "['$createdAtField', '$updatedAtField']", $templateData);
@@ -95,7 +95,7 @@ class GeneratorPublishCommand extends PublishBaseCommand
 
     private function publishBaseController()
     {
-        $templateData = get_template('app_base_controller', 'laravel-generator');
+        $templateData = get_template('app_base_controller', 'ghost-generator');
 
         $templateData = $this->fillTemplate($templateData);
 
@@ -114,7 +114,7 @@ class GeneratorPublishCommand extends PublishBaseCommand
 
     private function publishBaseRepository()
     {
-        $templateData = get_template('base_repository', 'laravel-generator');
+        $templateData = get_template('base_repository', 'ghost-generator');
 
         $templateData = $this->fillTemplate($templateData);
 
