@@ -11,6 +11,14 @@ class GeneratorFieldRelation
     public $inputs;
     public $relationName;
 
+    public static function createBelongsToRelation($class, $localKey, $foreignKey)
+    {
+        $relation = new self();
+        $relation->type = 'mt1';
+        $relation->inputs = [$class, $localKey, $foreignKey];
+        return $relation;
+    }
+
     public static function parseRelation($relationInput)
     {
         $inputs = explode(',', $relationInput);

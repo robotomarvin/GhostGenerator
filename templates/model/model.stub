@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace $NAMESPACE_MODEL$;
 
-use $NAMESPACE_MODEL_EXTEND$ as Model;
+use $NAMESPACE_MODEL_EXTEND$;
 $SOFT_DELETE_IMPORT$
 $DOCS$
 class $MODEL_NAME$ extends Model
 {
+
 $SOFT_DELETE$
     public $table = '$TABLE_NAME$';
     $TIMESTAMPS$
@@ -35,4 +38,5 @@ $PRIMARY$
     ];
 
     $RELATIONS$
+
 }

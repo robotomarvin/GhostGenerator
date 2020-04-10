@@ -1,0 +1,7 @@
+<!-- 'bootstrap / Toggle Switch $FIELD_NAME_TITLE$ Field' -->
+<div class="form-group col-sm-12">
+    {!! Form::label('$FIELD_NAME$', __('$FIELD_NAME_TITLE$') . ':') !!}
+    <label class="checkbox-inline">
+   {!! Form::checkbox('$FIELD_NAME$', 1, true,  ['data-toggle' => 'toggle']) !!}
+    </label>
+</div>

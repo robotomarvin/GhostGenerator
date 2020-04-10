@@ -10,6 +10,8 @@ class GeneratorConfig
     public $nsApp;
     public $nsRepository;
     public $nsModel;
+    public $nsForms;
+    public $nsPolicies;
     public $nsDataTables;
     public $nsModelExtend;
 
@@ -38,10 +40,13 @@ class GeneratorConfig
     public $pathApiTestTraits;
 
     public $pathController;
+    public $pathForms;
     public $pathRequest;
     public $pathRoutes;
     public $pathViews;
     public $modelJsPath;
+
+    public $pathPolicies;
 
     /* Model Names */
     public $mName;
@@ -63,6 +68,7 @@ class GeneratorConfig
     /* Prefixes */
     public $prefixes;
 
+    /** @var CommandData */
     private $commandData;
 
     /* Command Options */
@@ -132,6 +138,8 @@ class GeneratorConfig
         if (config('infyom.laravel_generator.ignore_model_prefix', false)) {
             $this->nsModel = $realPrefix . config('infyom.laravel_generator.namespace.model', 'Models');
         }
+        $this->nsForms = $realPrefix . config('infyom.laravel_generator.namespace.forms', 'Forms');
+        $this->nsPolicies = $realPrefix . config('infyom.laravel_generator.namespace.policies', 'Policies');
         $this->nsDataTables = $realPrefix . config('infyom.laravel_generator.namespace.datatables', 'DataTables').$prefix;
         $this->nsModelExtend = config(
             'infyom.laravel_generator.model_extend_class',
@@ -208,6 +216,16 @@ class GeneratorConfig
             app_path('Http/Controllers/')
         ).$prefix;
 
+        $this->pathForms = $realPrefix . config(
+                'infyom.laravel_generator.path.forms',
+                app_path('Forms/')
+            ).$prefix;
+
+        $this->pathPolicies = $realPrefix . config(
+                'infyom.laravel_generator.path.policies',
+                app_path('Policies/')
+            ) . $prefix;
+
         $this->pathRequest = $realPrefix . config('infyom.laravel_generator.path.request', app_path('Http/Requests/')).$prefix;
 
         if ($commandData->isModule) {
@@ -239,6 +257,8 @@ class GeneratorConfig
         $commandData->addDynamicVariable('$NAMESPACE_APP$', $this->nsApp);
         $commandData->addDynamicVariable('$NAMESPACE_REPOSITORY$', $this->nsRepository);
         $commandData->addDynamicVariable('$NAMESPACE_MODEL$', $this->nsModel);
+        $commandData->addDynamicVariable('$NAMESPACE_FORMS$', $this->nsForms);
+        $commandData->addDynamicVariable('$NAMESPACE_POLICIES$', $this->nsPolicies);
         $commandData->addDynamicVariable('$NAMESPACE_DATATABLES$', $this->nsDataTables);
         $commandData->addDynamicVariable('$NAMESPACE_MODEL_EXTEND$', $this->nsModelExtend);
 
@@ -271,6 +291,8 @@ class GeneratorConfig
         $commandData->addDynamicVariable('$MODEL_NAME_PLURAL_SLASH$', $this->mSlashPlural);
         $commandData->addDynamicVariable('$MODEL_NAME_HUMAN$', $this->mHuman);
         $commandData->addDynamicVariable('$MODEL_NAME_PLURAL_HUMAN$', $this->mHumanPlural);
+
+        $commandData->addDynamicVariable('$PERMISSION_PREFIX$', $commandData->boundTo === EBoundTo::NONE ? 'admin' : 'project');
 
         if ($commandData->isModule) {
 	        $commandData->addDynamicVariable('$ROUTE_NAMED_PREFIX$', $commandData->modulePrefix.'::');

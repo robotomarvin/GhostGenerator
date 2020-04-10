@@ -45,9 +45,9 @@ class ViewGenerator extends BaseGenerator
                 $this->generateIndex();
             }
 
-            if (count(array_intersect(['create', 'update'], $viewsToBeGenerated)) > 0) {
-                $this->generateFields();
-            }
+            // if (count(array_intersect(['create', 'update'], $viewsToBeGenerated)) > 0) {
+                // $this->generateFields();
+            // }
 
             if (in_array('create', $viewsToBeGenerated)) {
                 $this->generateCreate();
@@ -64,7 +64,7 @@ class ViewGenerator extends BaseGenerator
         } else {
             $this->generateTable();
             $this->generateIndex();
-            $this->generateFields();
+            // $this->generateFields();
             $this->generateCreate();
             $this->generateUpdate();
             $this->generateShowFields();

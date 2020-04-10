@@ -1,0 +1,34 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace $NAMESPACE_FORMS$;
+
+use $NAMESPACE_MODEL$\$MODEL_NAME$;
+use App\Forms\$BASE_FACTORY_CLASS$;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
+class $MODEL_NAME$FormFactory
+{
+
+    /** @var $BASE_FACTORY_CLASS$ */
+    private $baseFactory;
+
+    public function __construct($BASE_FACTORY_CLASS$ $baseFactory)
+    {
+        $this->baseFactory = $baseFactory;
+    }
+
+    public function create($MODEL_NAME$ $$MODEL_NAME_CAMEL$, string $action, string $method)
+    {
+        return $this->baseFactory->createBuilder($BASE_FACTORY_PARAMS$)
+            $FIELDS$
+            ->add('save', SubmitType::class, [
+                'label' => 'Uložit',
+                'attr' => ['class' => 'btn-primary'],
+            ])
+            ->setData($$MODEL_NAME_CAMEL$)
+            ->getForm();
+    }
+
+}

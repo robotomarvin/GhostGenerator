@@ -1,0 +1,5 @@
+@can('index', \$NAMESPACE_MODEL$\$MODEL_NAME$::class)
+    <li class="{{ Request::is('admin/$MODEL_NAME_PLURAL_CAMEL$*') ? 'active' : '' }}">
+        <a href="{!! route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_DASHED$.index') !!}"><i class="fa fa-edit"></i><span>{{ __('$MODEL_NAME_PLURAL_HUMAN$') }}</span></a>
+    </li>
+@endcan

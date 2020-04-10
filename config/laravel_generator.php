@@ -29,6 +29,10 @@ return [
 
         'controller'        => app_path('Http/Controllers/'),
 
+        'forms'             => app_path('Forms/'),
+
+        'policies'          => app_path('Policies/'),
+
         'api_controller'    => app_path('Http/Controllers/API/'),
 
         'test_trait'        => base_path('tests/Traits/'),

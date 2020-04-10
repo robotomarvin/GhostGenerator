@@ -1,0 +1,4 @@
+            ->add('$FIELD_NAME$', $FIELD_TYPE$Type::class, [
+                'label' => __('$FIELD_NAME_TITLE$'),
+                'required' => TRUE,
+            ])
