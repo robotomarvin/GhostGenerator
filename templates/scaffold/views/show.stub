@@ -1,0 +1,32 @@
+@extends('admin.layouts.app')
+
+@section('content')
+    <section class="content-header">
+        <h1>{{ __('$MODEL_NAME_HUMAN$') }}</h1>
+    </section>
+    <div class="content">
+        <div class="box box-primary">
+            <div class="box-body">
+                <div class="actions">
+                    @can('delete', $$MODEL_NAME_CAMEL$)
+                    {!! Form::open(['route' => ['$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_DASHED$.destroy', $$MODEL_NAME_CAMEL$], 'method' => 'delete']) !!}
+                    @endcan
+                    @can('update', $$MODEL_NAME_CAMEL$)
+                        <a href="{{ route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_DASHED$.edit', $$MODEL_NAME_CAMEL$) }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Editovat</a>
+                    @endcan
+                    @can('delete', $$MODEL_NAME_CAMEL$)
+                        {!! Form::button('<i class="glyphicon glyphicon-trash"></i> Smazat', [
+                            'type' => 'submit',
+                            'class' => 'btn btn-danger',
+                            'onclick' => "return confirm('" . __('Jste si jisti') . "?')"
+                        ]) !!}
+                    {!! Form::close() !!}
+                    @endcan
+                </div>
+                <table class="table">
+                    @include('$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.show_fields')
+                </table>
+            </div>
+        </div>
+    </div>
+@endsection

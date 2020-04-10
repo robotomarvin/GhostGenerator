@@ -1,0 +1,5 @@
+<!-- $FIELD_NAME_TITLE$ Field -->
+<tr>
+    <td>{!! Form::label('$FIELD_NAME$', __('$FIELD_NAME_TITLE$') . ':') !!}</td>
+    <td>{!! $$MODEL_NAME_CAMEL$->$FIELD_NAME$ !!}</td>
+</tr>

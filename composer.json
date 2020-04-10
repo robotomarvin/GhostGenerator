@@ -1,6 +1,6 @@
 {
-    "name": "infyomlabs/laravel-generator",
-    "description": "InfyOm Laravel Generator",
+    "name": "youngdevelopers/ghost-generator",
+    "description": "GhostGenerator",
     "keywords": [
         "laravel",
         "api",
@@ -17,6 +17,10 @@
     ],
     "license": "MIT",
     "authors": [
+        {
+            "name": "Martin Bruna",
+            "email": "mbrunas.p@gmail.com"
+        },
         {
             "name": "Mitul Golakiya",
             "email": "me@mitul.me"
@@ -51,5 +55,5 @@
                 "\\InfyOm\\Generator\\InfyOmGeneratorServiceProvider"
             ]
         }
-    }    
+    }
 }

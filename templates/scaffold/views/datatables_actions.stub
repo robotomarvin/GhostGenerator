@@ -1,0 +1,25 @@
+@can('delete', $model)
+    {!! Form::open(['route' => ['$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_DASHED$.destroy', $$PRIMARY_KEY_NAME$], 'method' => 'delete']) !!}
+@endcan
+<div class='btn-group'>
+    @can('view', $model)
+        <a href="{{ route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_DASHED$.show', $$PRIMARY_KEY_NAME$) }}" class='btn btn-default btn-xs'>
+            <i class="glyphicon glyphicon-eye-open"></i>
+        </a>
+    @endcan
+    @can('update', $model)
+        <a href="{{ route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_DASHED$.edit', $$PRIMARY_KEY_NAME$) }}" class='btn btn-default btn-xs'>
+            <i class="glyphicon glyphicon-edit"></i>
+        </a>
+    @endcan
+    @can('delete', $model)
+        {!! Form::button('<i class="glyphicon glyphicon-trash"></i>', [
+            'type' => 'submit',
+            'class' => 'btn btn-danger btn-xs',
+            'onclick' => "return confirm('" . __('Jste si jisti') . "?')"
+        ]) !!}
+    @endcan
+</div>
+@can('delete', $model)
+    {!! Form::close() !!}
+@endcan

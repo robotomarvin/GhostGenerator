@@ -1,0 +1,42 @@
+<?php
+
+use App\Models\Permission;
+use Illuminate\Database\Migrations\Migration;
+
+class Create$MODEL_NAME$Permissions extends Migration
+{
+
+    private const PERMISSIONS = [
+        '$PERMISSION_PREFIX$.$MODEL_NAME_SNAKE$.index',
+        '$PERMISSION_PREFIX$.$MODEL_NAME_SNAKE$.create',
+        '$PERMISSION_PREFIX$.$MODEL_NAME_SNAKE$.view',
+        '$PERMISSION_PREFIX$.$MODEL_NAME_SNAKE$.update',
+        '$PERMISSION_PREFIX$.$MODEL_NAME_SNAKE$.delete',
+    ];
+
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        foreach (self::PERMISSIONS as $permission) {
+            DB::table('permissions')->insert([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
+        }
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Permission::query()->whereIn('name', self::PERMISSIONS)->delete();
+    }
+
+}

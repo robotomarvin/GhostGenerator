@@ -1,0 +1,98 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace $NAMESPACE_POLICIES$;
+
+use App\Models\User;
+use $NAMESPACE_MODEL$\$MODEL_NAME$;
+use Illuminate\Auth\Access\HandlesAuthorization;
+
+class $MODEL_NAME$Policy
+{
+
+    use HandlesAuthorization;
+
+    /**
+     * Determine whether the user can view the $MODEL_NAME_SNAKE$.
+     *
+     * @param  User $user
+     * @param  $MODEL_NAME$ $$MODEL_NAME_CAMEL$
+     * @return bool
+     */
+    public function view(User $user, $MODEL_NAME$ $$MODEL_NAME_CAMEL$)
+    {
+    	return $user->can('$PERMISSION_PREFIX$.$MODEL_NAME_SNAKE$.view');
+    }
+
+	/**
+	 * Determine whether the user can view the $MODEL_NAME_SNAKE$.
+	 *
+	 * @param  User $user
+	 * @return bool
+	 */
+	public function index(User $user)
+	{
+		return $user->can('$PERMISSION_PREFIX$.$MODEL_NAME_SNAKE$.index');
+	}
+
+    /**
+     * Determine whether the user can create $MODEL_NAME_SNAKE$.
+     *
+     * @param  User $user
+     * @return bool
+     */
+    public function create(User $user)
+    {
+	    return $user->can('$PERMISSION_PREFIX$.$MODEL_NAME_SNAKE$.create');
+    }
+
+    /**
+     * Determine whether the user can update the $MODEL_NAME_SNAKE$.
+     *
+     * @param  User $user
+     * @param  $MODEL_NAME$  $$MODEL_NAME_CAMEL$
+     * @return bool
+     */
+    public function update(User $user, $MODEL_NAME$ $$MODEL_NAME_CAMEL$)
+    {
+	    return $user->can('$PERMISSION_PREFIX$.$MODEL_NAME_SNAKE$.update');
+    }
+
+    /**
+     * Determine whether the user can delete the $MODEL_NAME_SNAKE$.
+     *
+     * @param  User $user
+     * @param  $MODEL_NAME$  $$MODEL_NAME_CAMEL$
+     * @return bool
+     */
+    public function delete(User $user, $MODEL_NAME$ $$MODEL_NAME_CAMEL$)
+    {
+	    return $user->can('$PERMISSION_PREFIX$.$MODEL_NAME_SNAKE$.delete');
+    }
+
+    /**
+     * Determine whether the user can restore the $MODEL_NAME_SNAKE$.
+     *
+     * @param  User $user
+     * @param  $MODEL_NAME$  $$MODEL_NAME_CAMEL$
+     * @return bool
+     */
+    public function restore(User $user, $MODEL_NAME$ $$MODEL_NAME_CAMEL$)
+    {
+	    return FALSE;
+    }
+
+    /**
+     * Determine whether the user can permanently delete the $MODEL_NAME_SNAKE$.
+     *
+     * @param  User $user
+     * @param  $MODEL_NAME$  $$MODEL_NAME_CAMEL$
+     * @return bool
+     */
+    public function forceDelete(User $user, $MODEL_NAME$ $$MODEL_NAME_CAMEL$)
+    {
+    	return FALSE;
+    }
+
+}

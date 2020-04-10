@@ -1,8 +1,7 @@
-<?php namespace $NAMESPACE_TESTS$;
+<?php
 
 trait ApiTestTrait
 {
-    private $response;
     public function assertApiResponse(Array $actualData)
     {
         $this->assertApiSuccess();
@@ -16,16 +15,13 @@ trait ApiTestTrait
 
     public function assertApiSuccess()
     {
-        $this->response->assertStatus(200);
-        $this->response->assertJson(['success' => true]);
+        $this->assertResponseOk();
+        $this->seeJson(['success' => true]);
     }
 
     public function assertModelData(Array $actualData, Array $expectedData)
     {
         foreach ($actualData as $key => $value) {
-            if (in_array($key, $TIMESTAMPS$)) {
-                continue;
-            }
             $this->assertEquals($actualData[$key], $expectedData[$key]);
         }
     }

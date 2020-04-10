@@ -39,9 +39,16 @@ class CommandData
 
     public $isModule;
 
+    public $module;
+
     public $modulePrefix;
 
     public $realPathPrefix;
+
+    public $boundTo;
+
+    public $isOwnedByUser;
+
 
     /** @var CommandData */
     protected static $instance = null;
@@ -65,6 +72,7 @@ class CommandData
         $this->fieldNamesMapping = [
             '$FIELD_NAME_TITLE$' => 'fieldTitle',
             '$FIELD_NAME$'       => 'name',
+            '$FIELD_TYPE$'       => 'htmlType',
         ];
 
         $this->config = new GeneratorConfig();
@@ -92,15 +100,30 @@ class CommandData
 
     public function initCommandData()
     {
-	    $this->namespacePrefix = $this->commandObj->ask('Enter default prefix (App\\)', 'App\\');
-	    $this->isModule = strpos($this->namespacePrefix, 'Modules') === 0;
+        $this->module = $this->commandObj->ask('Enter module', 'App');
+        $this->isModule = $this->module !== 'App';
+        if ($this->isModule) {
+            $this->namespacePrefix = 'Modules\\' . $this->module . '\\';
+        } else {
+            $this->namespacePrefix = $this->module . '\\';
+        }
+
 	    if ($this->isModule) {
-	    	$parts = explode('\\', $this->namespacePrefix);
-		    $this->modulePrefix = Str::camel($parts[1]);
+		    $this->modulePrefix = Str::camel($this->module);
 		    $this->realPathPrefix = base_path(str_replace('\\', '/', $this->namespacePrefix));
 	    } else {
 	    	$this->realPathPrefix = app_path('') . '/';
 	    }
+        $this->boundTo = $this->commandObj->anticipate('Bound to (' . implode(', ', EBoundTo::ALL) . ')', EBoundTo::ALL, EBoundTo::NONE);
+
+	    if (in_array($this->boundTo, EBoundTo::ALL, TRUE) === FALSE)
+        {
+            $this->commandError('Undefinded bound to');
+            die();
+        }
+
+        $isOwnedByUser = $this->commandObj->ask('Is owned by user (Y/N)', 'N');
+        $this->isOwnedByUser = strtolower(trim($isOwnedByUser)) === 'y';
 
         $this->config->init($this);
     }
@@ -145,6 +168,8 @@ class CommandData
         $this->commandInfo('Enter "exit" to finish');
 
         $this->addPrimaryKey();
+        $this->addBoundToField();
+        $this->addUserField();
 
         while (true) {
             $fieldInputStr = $this->commandObj->ask('Field: (name title db_type html_type options)', '');
@@ -212,7 +237,50 @@ class CommandData
         $this->fields[] = $updatedAt;
     }
 
-    private function getInputFromFileOrJson()
+    private function addBoundToField()
+    {
+        if ($this->boundTo === EBoundTo::NONE) {
+            return;
+        }
+        if ($this->boundTo === EBoundTo::PROJECT) {
+            $relatedClass = 'Project';
+            $relatedTable = 'projects';
+            $columnName = 'project_id';
+            $foreignColumn = 'id';
+        } else {
+            $relatedClass = 'ProjectType';
+            $relatedTable = 'project_types';
+            $columnName = 'project_type_id';
+            $foreignColumn = 'id';
+        }
+
+        $boundTo = new GeneratorField();
+        $boundTo->name = $columnName;
+        $boundTo->parseDBType('integer:unsigned:foreign,' . $relatedTable . ',id');
+        $boundTo->inForm = FALSE; // added manually to form
+        $boundTo->htmlType = 'Choice';
+        $boundTo->fieldTitle = $this->boundTo === EBoundTo::PROJECT ? 'Projekt' : 'Typ projektu';
+        $this->fields[] = $boundTo;
+        $this->relations[] = GeneratorFieldRelation::createBelongsToRelation($relatedClass, $columnName, $foreignColumn);
+    }
+
+
+    private function addUserField()
+    {
+        if ($this->isOwnedByUser === FALSE) {
+            return;
+        }
+
+        $user = new GeneratorField();
+        $user->name = 'user_id';
+        $user->parseDBType('integer:unsigned:foreign,users,id');
+        $user->htmlType = 'Choice';
+        $user->fieldTitle = 'Uživatel';
+        $this->fields[] = $user;
+        $this->relations[] = GeneratorFieldRelation::createBelongsToRelation('User', 'user_id', 'id');
+    }
+
+private function getInputFromFileOrJson()
     {
         // fieldsFile option will get high priority than json option if both options are passed
         try {

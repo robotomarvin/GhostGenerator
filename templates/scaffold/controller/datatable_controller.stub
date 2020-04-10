@@ -3,22 +3,34 @@
 namespace $NAMESPACE_CONTROLLER$;
 
 use $NAMESPACE_DATATABLES$\$MODEL_NAME$DataTable;
-use $NAMESPACE_REQUEST$;
-use $NAMESPACE_REQUEST$\Create$MODEL_NAME$Request;
-use $NAMESPACE_REQUEST$\Update$MODEL_NAME$Request;
+use $NAMESPACE_FORMS$\$MODEL_NAME$FormFactory;
+use $NAMESPACE_MODEL$\$MODEL_NAME$;
 use $NAMESPACE_REPOSITORY$\$MODEL_NAME$Repository;
-use Flash;
 use $NAMESPACE_APP$\Http\Controllers\AppBaseController;
-use Response;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
+use Laracasts\Flash\Flash;
 
 class $MODEL_NAME$Controller extends AppBaseController
 {
-    /** @var  $MODEL_NAME$Repository */
+
+    /** @var $MODEL_NAME$Repository */
     private $$MODEL_NAME_CAMEL$Repository;
 
-    public function __construct($MODEL_NAME$Repository $$MODEL_NAME_CAMEL$Repo)
+    /** @var $MODEL_NAME$FormFactory */
+    private $$MODEL_NAME_CAMEL$FormFactory;
+
+    public function __construct(
+        $MODEL_NAME$Repository $$MODEL_NAME_CAMEL$Repository,
+        $MODEL_NAME$FormFactory $$MODEL_NAME_CAMEL$FormFactory
+    )
     {
-        $this->$MODEL_NAME_CAMEL$Repository = $$MODEL_NAME_CAMEL$Repo;
+        $this->$MODEL_NAME_CAMEL$Repository = $$MODEL_NAME_CAMEL$Repository;
+        $this->$MODEL_NAME_CAMEL$FormFactory = $$MODEL_NAME_CAMEL$FormFactory;
+
+        $this->authorizeResource($MODEL_NAME$::class);
     }
 
     /**
@@ -35,117 +47,125 @@ class $MODEL_NAME$Controller extends AppBaseController
     /**
      * Show the form for creating a new $MODEL_NAME$.
      *
-     * @return Response
+     * @param Request $request
+     *
+     * @return RedirectResponse|View
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.create');
+        return $this->createForm($request);
     }
 
     /**
      * Store a newly created $MODEL_NAME$ in storage.
      *
-     * @param Create$MODEL_NAME$Request $request
+     * @param Request $request
      *
-     * @return Response
+     * @return RedirectResponse|View
      */
-    public function store(Create$MODEL_NAME$Request $request)
+    public function store(Request $request)
     {
-        $input = $request->all();
-
-        $$MODEL_NAME_CAMEL$ = $this->$MODEL_NAME_CAMEL$Repository->create($input);
-
-        Flash::success('$MODEL_NAME_HUMAN$ saved successfully.');
-
-        return redirect(route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_CAMEL$.index'));
+        return $this->createForm($request);
     }
 
     /**
      * Display the specified $MODEL_NAME$.
      *
-     * @param  int $id
+     * @param $MODEL_NAME$ $$MODEL_NAME_CAMEL$
      *
-     * @return Response
+     * @return View
      */
-    public function show($id)
+    public function show($MODEL_NAME$ $$MODEL_NAME_CAMEL$)
     {
-        $$MODEL_NAME_CAMEL$ = $this->$MODEL_NAME_CAMEL$Repository->find($id);
-
-        if (empty($$MODEL_NAME_CAMEL$)) {
-            Flash::error('$MODEL_NAME_HUMAN$ not found');
-
-            return redirect(route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_CAMEL$.index'));
-        }
-
-        return view('$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.show')->with('$MODEL_NAME_CAMEL$', $$MODEL_NAME_CAMEL$);
+        return view('$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.show', ['$MODEL_NAME_CAMEL$' => $$MODEL_NAME_CAMEL$]);
     }
 
     /**
      * Show the form for editing the specified $MODEL_NAME$.
      *
-     * @param  int $id
+     * @param $MODEL_NAME$ $$MODEL_NAME_CAMEL$
+     * @param Request $request
      *
-     * @return Response
+     * @return RedirectResponse|View
      */
-    public function edit($id)
+    public function edit($MODEL_NAME$ $$MODEL_NAME_CAMEL$, Request $request)
     {
-        $$MODEL_NAME_CAMEL$ = $this->$MODEL_NAME_CAMEL$Repository->find($id);
-
-        if (empty($$MODEL_NAME_CAMEL$)) {
-            Flash::error('$MODEL_NAME_HUMAN$ not found');
-
-            return redirect(route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_CAMEL$.index'));
-        }
-
-        return view('$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.edit')->with('$MODEL_NAME_CAMEL$', $$MODEL_NAME_CAMEL$);
+        return $this->updateForm($$MODEL_NAME_CAMEL$, $request);
     }
 
     /**
      * Update the specified $MODEL_NAME$ in storage.
      *
-     * @param  int              $id
-     * @param Update$MODEL_NAME$Request $request
+     * @param $MODEL_NAME$ $$MODEL_NAME_CAMEL$
+     * @param Request $request
      *
-     * @return Response
+     * @return RedirectResponse|View
      */
-    public function update($id, Update$MODEL_NAME$Request $request)
+    public function update($MODEL_NAME$ $$MODEL_NAME_CAMEL$, Request $request)
     {
-        $$MODEL_NAME_CAMEL$ = $this->$MODEL_NAME_CAMEL$Repository->find($id);
-
-        if (empty($$MODEL_NAME_CAMEL$)) {
-            Flash::error('$MODEL_NAME_HUMAN$ not found');
-
-            return redirect(route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_CAMEL$.index'));
-        }
-
-        $$MODEL_NAME_CAMEL$ = $this->$MODEL_NAME_CAMEL$Repository->update($request->all(), $id);
-
-        Flash::success('$MODEL_NAME_HUMAN$ updated successfully.');
-
-        return redirect(route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_CAMEL$.index'));
+        return $this->updateForm($$MODEL_NAME_CAMEL$, $request);
     }
 
     /**
      * Remove the specified $MODEL_NAME$ from storage.
      *
-     * @param  int $id
+     * @param $MODEL_NAME$ $$MODEL_NAME_CAMEL$
      *
-     * @return Response
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy($MODEL_NAME$ $$MODEL_NAME_CAMEL$)
     {
-        $$MODEL_NAME_CAMEL$ = $this->$MODEL_NAME_CAMEL$Repository->find($id);
+        $this->$MODEL_NAME_CAMEL$Repository->delete($$MODEL_NAME_CAMEL$->id);
 
-        if (empty($$MODEL_NAME_CAMEL$)) {
-            Flash::error('$MODEL_NAME_HUMAN$ not found');
+        Flash::success(__('Záznam úspěšně smazán'));
 
-            return redirect(route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_CAMEL$.index'));
+        return redirect(route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_DASHED$.index'));
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse|View
+     */
+    public function createForm(Request $request)
+    {
+        $$MODEL_NAME_CAMEL$ = new $MODEL_NAME$();
+        $form = $this->$MODEL_NAME_CAMEL$FormFactory->create($$MODEL_NAME_CAMEL$, route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_DASHED$.store'), 'POST');
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() === TRUE && $form->isValid()) {
+            $$MODEL_NAME_CAMEL$->save();
+
+            Flash::success(__('Záznam úspěšně vytvořen'));
+
+            return redirect(route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_DASHED$.show', $$MODEL_NAME_CAMEL$));
         }
 
-        $this->$MODEL_NAME_CAMEL$Repository->delete($id);
+        return view('$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.create', ['form' => $form]);
+    }
 
-        Flash::success('$MODEL_NAME_HUMAN$ deleted successfully.');
 
-        return redirect(route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_CAMEL$.index'));
+    /**
+     * @param $MODEL_NAME$ $$MODEL_NAME_CAMEL$
+     * @param Request $request
+     *
+     * @return RedirectResponse|View
+     */
+    public function updateForm($MODEL_NAME$ $$MODEL_NAME_CAMEL$, Request $request)
+    {
+        $form = $this->$MODEL_NAME_CAMEL$FormFactory->create($$MODEL_NAME_CAMEL$, route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_DASHED$.update', $$MODEL_NAME_CAMEL$), 'PATCH');
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() === TRUE && $form->isValid()) {
+            $$MODEL_NAME_CAMEL$->save();
+
+            Flash::success(__('Záznam úspěšně aktualizován'));
+
+            return redirect(route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_DASHED$.show', $$MODEL_NAME_CAMEL$));
+        }
+
+        return view('$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.edit', ['form' => $form]);
     }
 }

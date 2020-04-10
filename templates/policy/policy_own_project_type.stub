@@ -1,0 +1,119 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace $NAMESPACE_POLICIES$;
+
+use App\Models\User;
+use App\ProjectPolicyManager;
+use $NAMESPACE_MODEL$\$MODEL_NAME$;
+use Illuminate\Auth\Access\HandlesAuthorization;
+
+class $MODEL_NAME$Policy
+{
+
+    use HandlesAuthorization;
+
+    /** @var ProjectPolicyManager */
+    private $projectPolicyManager;
+
+    public function __construct(ProjectPolicyManager $projectPolicyManager)
+    {
+        $this->projectPolicyManager = $projectPolicyManager;
+    }
+
+    /**
+     * Determine whether the user can view the $MODEL_NAME_SNAKE$.
+     *
+     * @param  User $user
+     * @param  $MODEL_NAME$ $$MODEL_NAME_CAMEL$
+     * @return bool
+     */
+    public function view(User $user, $MODEL_NAME$ $$MODEL_NAME_CAMEL$)
+    {
+    	if ($user->can($$MODEL_NAME_CAMEL$->$PATH_TO_TYPE$->key . '.$MODEL_NAME_SNAKE$.view')) {
+    	    return TRUE;
+    	}
+
+    	return $user->can($$MODEL_NAME_CAMEL$->$PATH_TO_TYPE$->key . '.$MODEL_NAME_SNAKE$.view_own') && $$MODEL_NAME_CAMEL$->user->is($user);
+    }
+
+	/**
+	 * Determine whether the user can view the $MODEL_NAME_SNAKE$.
+	 *
+	 * @param  User $user
+	 * @return bool
+	 */
+	public function index(User $user)
+	{
+        return $this->projectPolicyManager->can($user, '.$MODEL_NAME_SNAKE$.index');
+	}
+
+    /**
+     * Determine whether the user can create $MODEL_NAME_SNAKE$.
+     *
+     * @param  User $user
+     * @return bool
+     */
+    public function create(User $user)
+    {
+        return $this->projectPolicyManager->can($user, '.$MODEL_NAME_SNAKE$.create');
+    }
+
+    /**
+     * Determine whether the user can update the $MODEL_NAME_SNAKE$.
+     *
+     * @param  User $user
+     * @param  $MODEL_NAME$  $$MODEL_NAME_CAMEL$
+     * @return bool
+     */
+    public function update(User $user, $MODEL_NAME$ $$MODEL_NAME_CAMEL$)
+    {
+    	if ($user->can($$MODEL_NAME_CAMEL$->$PATH_TO_TYPE$->key . '.$MODEL_NAME_SNAKE$.update')) {
+    	    return TRUE;
+    	}
+
+    	return $user->can($$MODEL_NAME_CAMEL$->$PATH_TO_TYPE$->key . '.$MODEL_NAME_SNAKE$.update_own') && $$MODEL_NAME_CAMEL$->user->is($user);
+    }
+
+    /**
+     * Determine whether the user can delete the $MODEL_NAME_SNAKE$.
+     *
+     * @param  User $user
+     * @param  $MODEL_NAME$  $$MODEL_NAME_CAMEL$
+     * @return bool
+     */
+    public function delete(User $user, $MODEL_NAME$ $$MODEL_NAME_CAMEL$)
+    {
+    	if ($user->can($$MODEL_NAME_CAMEL$->$PATH_TO_TYPE$->key . '.$MODEL_NAME_SNAKE$.delete')) {
+    	    return TRUE;
+    	}
+
+    	return $user->can($$MODEL_NAME_CAMEL$->$PATH_TO_TYPE$->key . '.$MODEL_NAME_SNAKE$.delete_own') && $$MODEL_NAME_CAMEL$->user->is($user);
+    }
+
+    /**
+     * Determine whether the user can restore the $MODEL_NAME_SNAKE$.
+     *
+     * @param  User $user
+     * @param  $MODEL_NAME$  $$MODEL_NAME_CAMEL$
+     * @return bool
+     */
+    public function restore(User $user, $MODEL_NAME$ $$MODEL_NAME_CAMEL$)
+    {
+	    return FALSE;
+    }
+
+    /**
+     * Determine whether the user can permanently delete the $MODEL_NAME_SNAKE$.
+     *
+     * @param  User $user
+     * @param  $MODEL_NAME$  $$MODEL_NAME_CAMEL$
+     * @return bool
+     */
+    public function forceDelete(User $user, $MODEL_NAME$ $$MODEL_NAME_CAMEL$)
+    {
+    	return FALSE;
+    }
+
+}
