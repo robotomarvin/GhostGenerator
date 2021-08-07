@@ -1,5 +1,7 @@
 @extends('admin.layouts.app')
 
+@section('title',  __('$MODEL_NAME_HUMAN$') )
+
 @section('content')
     <section class="content-header">
         <h1>{{ __('$MODEL_NAME_HUMAN$') }}</h1>

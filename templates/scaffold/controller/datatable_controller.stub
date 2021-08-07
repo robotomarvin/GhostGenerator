@@ -2,7 +2,6 @@
 
 namespace $NAMESPACE_CONTROLLER$;
 
-use $NAMESPACE_DATATABLES$\$MODEL_NAME$DataTable;
 use $NAMESPACE_FORMS$\$MODEL_NAME$FormFactory;
 use $NAMESPACE_MODEL$\$MODEL_NAME$;
 use $NAMESPACE_REPOSITORY$\$MODEL_NAME$Repository;
@@ -36,12 +35,11 @@ class $MODEL_NAME$Controller extends AppBaseController
     /**
      * Display a listing of the $MODEL_NAME$.
      *
-     * @param $MODEL_NAME$DataTable $$MODEL_NAME_CAMEL$DataTable
-     * @return Response
+     * @return View
      */
-    public function index($MODEL_NAME$DataTable $$MODEL_NAME_CAMEL$DataTable)
+    public function index()
     {
-        return $$MODEL_NAME_CAMEL$DataTable->render('$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.index');
+        return view('$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.index');
     }
 
     /**

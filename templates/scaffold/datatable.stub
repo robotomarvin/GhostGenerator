@@ -1,93 +1,37 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace $NAMESPACE_DATATABLES$;
 
-use App\DataTables\AbstractDataTable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use YoungDevelopers\LaravelLiweTables\DataTable;
+use YoungDevelopers\LaravelLiweTables\Filters\LikeFilter;
 use $NAMESPACE_MODEL$\$MODEL_NAME$;
-use Yajra\DataTables\EloquentDataTable;
 
-class $MODEL_NAME$DataTable extends AbstractDataTable
+/**
+ * Class $MODEL_NAME$DataTable
+ */
+class $MODEL_NAME$DataTable extends DataTable
 {
 
-	protected $excludeFromPrint = ['action'];
-
-	protected $excludeFromExport = ['action'];
-
-    /**
-     * Build DataTable class.
-     *
-     * @param mixed $query Results from query() method.
-     * @return \Yajra\DataTables\DataTableAbstract
-     */
-    public function dataTable($query)
+    protected function buildTable()
     {
-        $dataTable = new EloquentDataTable($query);
+        $this->addColumn('id', __('ID'));
+$DATATABLE_COLUMNS$,
 
-        return $dataTable->addColumn('action', '$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.datatables_actions');
-    }
-
-    /**
-     * Get query source of dataTable.
-     *
-     * @param \App\Models\$MODEL_NAME$ $model
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function query($MODEL_NAME$ $model)
-    {
-        return $model->newQuery();
-    }
-
-    /**
-     * Optional method if you want to use html builder.
-     *
-     * @return \Yajra\DataTables\Html\Builder
-     */
-    public function html()
-    {
-	    $buttons = [
-		    ['extend' => 'export', 'text' => '<i class="fa fa-download"></i> ' . __('Exportovat'), 'className' => 'btn btn-default btn-sm no-corner'],
-		    ['extend' => 'print', 'text' => '<i class="fa fa-print"></i> ' . __('Tisk'), 'className' => 'btn btn-default btn-sm no-corner'],
-		    ['extend' => 'reload', 'text' => '<i class="fa fa-refresh"></i> ' . __('Aktualizovat'), 'className' => 'btn btn-default btn-sm no-corner'],
-	    ];
+        $this->addColumn('action', __('Akce'))
+            ->setSortable(FALSE)
+            ->setRenderer('$VIEW_PREFIX$$MODEL_NAME_PLURAL_SNAKE$.datatables_actions');
 
 	    if (Auth::user()->can('create', $MODEL_NAME$::class)) {
-		    $buttons[] = ['extend' => 'create', 'text' => '<i class="fa fa-plus"></i> ' . __('Přidat'), 'className' => 'btn btn-default btn-sm no-corner'];
-	    }
-
-        return $this->builder()
-            ->columns($this->getColumns())
-            ->minifiedAjax()
-	        ->addAction(['width' => '120px', 'title' => __('Akce')])
-            ->parameters([
-                'dom'     => 'Bfrtip',
-                'order'   => [[0, 'asc']],
-	            'language' => $this->getLanguage(),
-                'buttons' => $buttons,
-	            'pageLength' => setting('page.per_page'),
-            ]);
+            $this->addAction(route('$ROUTE_NAMED_PREFIX$$MODEL_NAME_PLURAL_DASHED$.create'), __('Přidat'), 'fa-plus', 'btn-success');
+        }
     }
 
-    /**
-     * Get columns.
-     *
-     * @return array
-     */
-    protected function getColumns()
+
+    protected function getBaseQuery(): Builder
     {
-        return [
-	        ['name' => 'id', 'data' => 'id', 'title' => __('ID')],
-            $DATATABLE_COLUMNS$,
-        ];
+        return $MODEL_NAME$::query();
     }
 
-    /**
-     * Get filename for export.
-     *
-     * @return string
-     */
-    protected function filename()
-    {
-        return '$MODEL_NAME_PLURAL_SNAKE$_datatable_' . time();
-    }
 }
